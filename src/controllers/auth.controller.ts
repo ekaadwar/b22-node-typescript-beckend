@@ -1,6 +1,8 @@
 import { Request, Response } from 'express'
+import { checkEmail } from '../models/auth.model'
 import response from '../helpers/response'
 
-export const login = (req: Request, res: Response) => {
-  return response(res, 'Login Success')
+export const login = async (req: Request, res: Response) => {
+  const { email, password } = req.body
+  const results: any = await checkEmail(email)
 }
