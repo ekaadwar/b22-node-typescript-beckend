@@ -1,9 +1,11 @@
 import { Router } from 'express'
-import { login, register } from '../controllers/auth.controller'
+import { forgotPassword, login, register } from '../controllers/auth.controller'
 
 const auth = Router()
 
 auth.post('/login', login)
 auth.post('/register', register)
+auth.post('/forgot_password', forgotPassword)
+auth.post('/reset_password')
 
 export default auth
