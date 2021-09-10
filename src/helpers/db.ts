@@ -8,7 +8,7 @@ const db = mysql.createConnection({
 })
 
 export const execPromise = (sql: string, data: any[]) => {
-  return new Promise((resolve, reject) => {
+  return new Promise<any>((resolve, reject) => {
     const execute = db.query(sql, data, (err, results) => {
       if (err) {
         reject(err)

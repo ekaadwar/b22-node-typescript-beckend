@@ -14,10 +14,18 @@ export const login = async (req: Request, res: Response) => {
 
 export const register = async (req: Request, res: Response) => {
   const { email, password } = req.body
-  const result = await createUser({ email, password })
+  const user = await getUserByEmail(email)
 
-  return res.json({
-    success: true,
-    message: 'Register successfully',
-  })
+  if (user.length < 1) {
+    const result = await createUser({ email, password })
+    return res.json({
+      success: true,
+      message: 'Register successfully',
+    })
+  } else {
+    return res.json({
+      success: false,
+      message: 'Register Failed : Email is exists',
+    })
+  }
 }
