@@ -12,3 +12,7 @@ export const getUserByResetCode = (code: string) => {
     [code]
   )
 }
+
+export const deletResetCode = (code: string) => {
+  return execPromise('DELETE FROM forgot_request WHERE code=?', [code])
+}

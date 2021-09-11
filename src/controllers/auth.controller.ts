@@ -4,6 +4,7 @@ import argon from 'argon2'
 import jwt from 'jsonwebtoken'
 import {
   createForgotData,
+  deletResetCode,
   getUserByResetCode,
 } from '../models/forgotPassword.model'
 import { customAlphabet } from 'nanoid/async'
@@ -91,6 +92,7 @@ export const resetPassword = async (req: Request, res: Response) => {
 
     const newPassword = await argon.hash(new_password)
     await updateUser({ password: newPassword }, user.id)
+    await deletResetCode(reset_code)
 
     return res.json({
       success: true,
