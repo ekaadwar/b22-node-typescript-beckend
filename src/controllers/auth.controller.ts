@@ -1,8 +1,11 @@
 import { Request, Response } from 'express'
-import { createUser, getUserByEmail } from '../models/users.model'
+import { createUser, getUserByEmail, updateUser } from '../models/users.model'
 import argon from 'argon2'
 import jwt from 'jsonwebtoken'
-import { createForgotData } from '../models/forgotPassword.model'
+import {
+  createForgotData,
+  getUserByResetCode,
+} from '../models/forgotPassword.model'
 import { customAlphabet } from 'nanoid/async'
 
 export const login = async (req: Request, res: Response) => {
@@ -65,6 +68,39 @@ export const forgotPassword = async (req: Request, res: Response) => {
     return res.json({
       success: true,
       message: 'email not found',
+    })
+  }
+}
+
+export const resetPassword = async (req: Request, res: Response) => {
+  const { email, reset_code, new_password, confirm_password } = req.body
+  const [user] = await getUserByResetCode(reset_code)
+  if (user) {
+    if (user.email !== email) {
+      return res.json({
+        success: false,
+        message: 'Wrong email or reset code',
+      })
+    }
+    if (new_password !== confirm_password) {
+      return res.json({
+        success: false,
+        message: 'Confirm Password is not same with New Password',
+      })
+    }
+
+    const newPassword = await argon.hash(new_password)
+    await updateUser({ password: newPassword }, user.id)
+
+    return res.json({
+      success: true,
+      message: 'Your password has been reset',
+      results: user,
+    })
+  } else {
+    return res.json({
+      success: false,
+      message: 'error',
     })
   }
 }

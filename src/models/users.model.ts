@@ -7,3 +7,7 @@ export const getUserByEmail = (email: string) => {
 export const createUser = (data: object) => {
   return execPromise('INSERT INTO users SET ?', [data])
 }
+
+export const updateUser = (data: object, id: number) => {
+  return execPromise('UPDATE users SET ? WHERE id=?', [data, id])
+}
